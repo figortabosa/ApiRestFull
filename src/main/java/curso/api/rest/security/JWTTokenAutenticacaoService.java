@@ -28,7 +28,7 @@ public class JWTTokenAutenticacaoService {
 	private static final String SECRET = "senhaExtremamenteSecreta";
 	
 	/*Prefixo padrão de token*/
-	private static final String TOKEN_PREFIX = "bearer";
+	private static final String TOKEN_PREFIX = "Bearer";
 	
 	private static final String HEADER_STRING = "Authorization";
 	
@@ -53,33 +53,39 @@ public class JWTTokenAutenticacaoService {
 	
 	public Authentication getAuthentication(HttpServletRequest request) {
 		
-		/*Pegar o token enviado no cabeçalho http*/
+/*Pega o token enviado no cabeçalho http*/
+		
 		String token = request.getHeader(HEADER_STRING);
 		
 		if (token != null) {
-			/*Faz a validação do token do usuario na requisição*/
-			String user = Jwts.parser().setSigningKey(SECRET) /*Neste ponto o token virá assim: Bearer 354er6263534e4e463wwww*/
-					.parseClaimsJws(token.replace(TOKEN_PREFIX, "")) /*Neste ponto fica assim:354er6263534e4e463wwww*/
-					.getBody().getSubject(); /*Fica assim: Ex:João Silva*/
 			
+			String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
+			
+			/*Faz a validação do token do usuário na requisição*/
+			String user = Jwts.parser().setSigningKey(SECRET) /*Bearer 87878we8we787w8e78w78e78w7e87w*/
+								.parseClaimsJws(tokenLimpo) /*87878we8we787w8e78w78e78w7e87w*/
+								.getBody().getSubject(); /*João Silva*/
 			if (user != null) {
 				
 				Usuario usuario = ApplicationContextLoad.getApplicationContext()
-						.getBean(UsuarioRepository.class).findUserLogin(user);
+						        .getBean(UsuarioRepository.class).findUserLogin(user);
 				
-			if (usuario != null) {
-				return new UsernamePasswordAuthenticationToken(usuario.getLogin(),
-																usuario.getSenha(),
-																usuario.getAuthorities());
-			}
-				
-			}else {
-				return null;
+				if (usuario != null) {
+					
+					//if (tokenLimpo.equalsIgnoreCase(usuario.getToken())) {
+					
+						return new UsernamePasswordAuthenticationToken(
+								usuario.getLogin(), 
+								usuario.getSenha(),
+								usuario.getAuthorities());
+				  }
+				}
 			}
 			
-		}else {
-			return null; /*Não autorizado*/
-		}
-		return null;
+		//}
+	
+		return null; /*Não autorizado*/
+		
 	}
+
 }
