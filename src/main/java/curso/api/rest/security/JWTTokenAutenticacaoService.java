@@ -59,6 +59,8 @@ public class JWTTokenAutenticacaoService {
 		
 		String token = request.getHeader(HEADER_STRING);
 		
+		try {
+		
 		if (token != null) {
 			
 			String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
@@ -84,8 +86,16 @@ public class JWTTokenAutenticacaoService {
 				}
 			}
 			
-		//}
+		//}fim da condição
 	
+		}catch (io.jsonwebtoken.ExpiredJwtException e) {
+			try {
+				response.getOutputStream().println("Seu tokem esta expirado!!");
+			} catch (IOException e1) {
+			
+			}
+		}
+		
 		liberacaoCors(response);
 		return null; /*Não autorizado*/
 		
