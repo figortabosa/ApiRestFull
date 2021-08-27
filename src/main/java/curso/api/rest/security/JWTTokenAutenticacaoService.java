@@ -45,6 +45,13 @@ public class JWTTokenAutenticacaoService {
 		/*Adiciona no cabeçalho*/
 		response.addHeader(HEADER_STRING, token); /*Authorization: Bearer 344dfww234wewrsss*/
 		
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		
+		ApplicationContextLoad.getApplicationContext()
+        .getBean(UsuarioRepository.class).atualizaUserToken(JWT, username);
+		
+		
+		
 		liberacaoCors(response);
 		
 		/* Escreve token como resposta no corpo do http*/

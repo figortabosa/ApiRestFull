@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,7 +35,8 @@ public class IndexConcroller {
 		return new ResponseEntity<Usuario>(usuario.get(), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/", produces = "application/json" )	
+	@GetMapping(value = "/", produces = "application/json" )
+	@CachePut("cacheUsuarios")
 	public ResponseEntity<List<Usuario>> usuario() {
 			
 			List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();
