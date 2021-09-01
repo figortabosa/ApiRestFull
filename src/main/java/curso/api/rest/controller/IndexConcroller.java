@@ -44,6 +44,15 @@ public class IndexConcroller {
 			return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
 		}
 	
+	@GetMapping(value = "/usuarioPorNome/{nome}", produces = "application/json")
+	@CachePut("cacheUsuarios")
+	public ResponseEntity<List<Usuario>> usuarioPorNome(@PathVariable (value = "nome") String nome){
+		
+		List<Usuario> usuarios = usuarioRepository.findUserByNome(nome);
+		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
+		
+	}
+	
 	@GetMapping(value = "/{id}/nome/{nome}", produces = "application/json")
 	public ResponseEntity<Usuario> consultaComMaisDeUmParametro(@PathVariable (value = "id") Long id
 																, @PathVariable(value = "nome") String nome) {
