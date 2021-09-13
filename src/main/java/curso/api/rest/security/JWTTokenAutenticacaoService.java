@@ -28,7 +28,7 @@ public class JWTTokenAutenticacaoService {
 	private static final String SECRET = "senhaExtremamenteSecreta";
 	
 	/*Prefixo padrão de token*/
-	private static final String TOKEN_PREFIX = "bearer";
+	private static final String TOKEN_PREFIX = "Bearer";
 	
 	private static final String HEADER_STRING = "Authorization";
 	
@@ -45,41 +45,87 @@ public class JWTTokenAutenticacaoService {
 		/*Adiciona no cabeçalho*/
 		response.addHeader(HEADER_STRING, token); /*Authorization: Bearer 344dfww234wewrsss*/
 		
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		
+		ApplicationContextLoad.getApplicationContext()
+        .getBean(UsuarioRepository.class).atualizaUserToken(JWT, username);
+		
+		
+		
+		liberacaoCors(response);
+		
 		/* Escreve token como resposta no corpo do http*/
 		response.getWriter().write("{\"Authorization\": \""+token+"\"}");
 	}
 	
 	/*Retorna o usuario validado com o token ou caso não seja valido retorna null*/
 	
-	public Authentication getAuthentication(HttpServletRequest request) {
+	public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) {
 		
-		/*Pegar o token enviado no cabeçalho http*/
+/*Pega o token enviado no cabeçalho http*/
+		
 		String token = request.getHeader(HEADER_STRING);
 		
+		try {
+		
 		if (token != null) {
-			/*Faz a validação do token do usuario na requisição*/
-			String user = Jwts.parser().setSigningKey(SECRET) /*Neste ponto o token virá assim: Bearer 354er6263534e4e463wwww*/
-					.parseClaimsJws(token.replace(TOKEN_PREFIX, "")) /*Neste ponto fica assim:354er6263534e4e463wwww*/
-					.getBody().getSubject(); /*Fica assim: Ex:João Silva*/
 			
+			String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
+			
+			/*Faz a validação do token do usuário na requisição*/
+			String user = Jwts.parser().setSigningKey(SECRET) /*Bearer 87878we8we787w8e78w78e78w7e87w*/
+								.parseClaimsJws(tokenLimpo) /*87878we8we787w8e78w78e78w7e87w*/
+								.getBody().getSubject(); /*João Silva*/
 			if (user != null) {
 				
 				Usuario usuario = ApplicationContextLoad.getApplicationContext()
-						.getBean(UsuarioRepository.class).findUserLogin(user);
+						        .getBean(UsuarioRepository.class).findUserLogin(user);
 				
-			if (usuario != null) {
-				return new UsernamePasswordAuthenticationToken(usuario.getLogin(),
-																usuario.getSenha(),
-																usuario.getAuthorities());
-			}
-				
-			}else {
-				return null;
+				if (usuario != null) {
+					
+					//if (tokenLimpo.equalsIgnoreCase(usuario.getToken())) {
+					
+						return new UsernamePasswordAuthenticationToken(
+								usuario.getLogin(), 
+								usuario.getSenha(),
+								usuario.getAuthorities());
+				  }
+				}
 			}
 			
-		}else {
-			return null; /*Não autorizado*/
+		//}fim da condição
+	
+		}catch (io.jsonwebtoken.ExpiredJwtException e) {
+			try {
+				response.getOutputStream().println("Seu tokem esta expirado!!");
+			} catch (IOException e1) {
+			
+			}
 		}
-		return null;
+		
+		liberacaoCors(response);
+		return null; /*Não autorizado*/
+		
 	}
+
+	private void liberacaoCors(HttpServletResponse response) {
+		
+		if (response.getHeader("Access-Control-Allow-Origin") == null) {
+			response.addHeader("Access-Control-Allow-Origin", "*");
+		}
+		
+		if (response.getHeader("Access-Control-Allow-Headers") == null) {
+			response.addHeader("Access-Control-Allow-Headers", "*");
+		}
+		
+		if (response.getHeader("Access-Control-Request-Headers") == null) {
+			response.addHeader("Access-Control-Request-Headers", "*");
+		}
+		
+		if (response.getHeader("Access-Control-Allow-Methods") == null) {
+			response.addHeader("Access-Control-Allow-Methods", "*");
+		}
+		
+	}
+
 }

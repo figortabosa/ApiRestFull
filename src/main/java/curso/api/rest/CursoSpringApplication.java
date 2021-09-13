@@ -14,13 +14,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"curso.api.rest.model"})
-@ComponentScan(basePackages = {"curso.*"})
-@EnableJpaRepositories(basePackages = {"curso.api.rest.repository"})
+//@EntityScan(basePackages = {"curso.api.rest.model"})
+//@ComponentScan(basePackages = {"curso.*"})
+//@EnableJpaRepositories(basePackages = {"curso.api.rest.repository"})
 @EnableTransactionManagement
 @EnableWebMvc
-@RestController
-@EnableAutoConfiguration
+//@RestController
+//@EnableAutoConfiguration
 public class CursoSpringApplication implements WebMvcConfigurer{
 
 	public static void main(String[] args) {
