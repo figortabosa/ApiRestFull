@@ -4,6 +4,7 @@ public class ObjetoError {
 
 	private String error;
 	private String code;
+	
 	public String getError() {
 		return error;
 	}
