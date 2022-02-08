@@ -56,6 +56,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 		Page<Usuario> retorno = findAll(example,pageRequeste);
 		return retorno;
 	}
+	@Transactional
+	@Modifying
+	@Query(value="update usuario set senha = ?1 where id = ?2", nativeQuery = true)
+	void updateSenha(String senha, Long codUser);
 	
 
 }

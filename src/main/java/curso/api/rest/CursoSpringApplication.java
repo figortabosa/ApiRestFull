@@ -30,7 +30,16 @@ public class CursoSpringApplication implements WebMvcConfigurer{
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
+		
 		registry.addMapping("/usuario/**")
+		.allowedMethods("*")
+		.allowedOriginPatterns("*");
+		
+		registry.addMapping("/profissao/**")
+		.allowedMethods("*")
+		.allowedOriginPatterns("*");
+		
+		registry.addMapping("/recuperar/**")
 		.allowedMethods("*")
 		.allowedOriginPatterns("*");
 	}

@@ -1,6 +1,8 @@
 package curso.api.rest.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -16,12 +18,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -45,8 +53,11 @@ public class Usuario implements UserDetails{
 	
 	private String cpf;
 	
+	
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(iso=ISO.DATE,pattern = "dd/MM/yyyy")
 	@Column(name = "nascimento")
-	private Date nascimento;
+	private Calendar nascimento;;
 	
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Telefone> telefones = new ArrayList<Telefone>();
@@ -59,6 +70,11 @@ public class Usuario implements UserDetails{
 	inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", table = "role", unique = false,updatable = false,
 	foreignKey = @ForeignKey(name = "role_fk", value = ConstraintMode.CONSTRAINT)))
 	private List<Role> roles = new ArrayList<>();
+	
+	private BigDecimal salario;
+	
+	@ManyToOne
+	private Profissao profissao;
 	
 	@JsonIgnore
 	private String token = "";
@@ -121,14 +137,31 @@ public class Usuario implements UserDetails{
 		this.telefones = telefones;
 	}
 	
-	
 
-	public Date getNascimento() {
+	public Calendar getNascimento() {
 		return nascimento;
 	}
 
-	public void setNascimento(Date nascimento) {
+	public void setNascimento(Calendar nascimento) {
 		this.nascimento = nascimento;
+	}
+
+	
+	public Profissao getProfissao() {
+		return profissao;
+	}
+
+	public void setProfissao(Profissao profissao) {
+		this.profissao = profissao;
+	}
+
+	
+	public BigDecimal getSalario() {
+		return salario;
+	}
+
+	public void setSalario(BigDecimal salario) {
+		this.salario = salario;
 	}
 
 	@Override
