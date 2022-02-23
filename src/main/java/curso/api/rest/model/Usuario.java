@@ -1,6 +1,8 @@
 package curso.api.rest.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -26,6 +28,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -33,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Usuario implements UserDetails{
+public class Usuario implements UserDetails, Serializable{
 	
 	//testando merge para a master
 	
@@ -54,10 +57,10 @@ public class Usuario implements UserDetails{
 	private String cpf;
 	
 	
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(iso=ISO.DATE,pattern = "dd/MM/yyyy")
+	//@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "nascimento")
-	private Calendar nascimento;;
+	private LocalDate nascimento;
 	
 	@OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Telefone> telefones = new ArrayList<Telefone>();
@@ -138,15 +141,15 @@ public class Usuario implements UserDetails{
 	}
 	
 
-	public Calendar getNascimento() {
+	
+	public LocalDate getNascimento() {
 		return nascimento;
 	}
 
-	public void setNascimento(Calendar nascimento) {
+	public void setNascimento(LocalDate nascimento) {
 		this.nascimento = nascimento;
 	}
 
-	
 	public Profissao getProfissao() {
 		return profissao;
 	}

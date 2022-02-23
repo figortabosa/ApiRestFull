@@ -17,6 +17,9 @@ import curso.api.rest.model.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
+	
+	@Query("select u from Usuario u where u.salario > 0")
+	List<Usuario> retornaListaString();
 
 	@Query("select u from Usuario u where u.login = ?1")
 	Usuario findUserLogin(String login);

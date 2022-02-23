@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,6 +127,15 @@ public class IndexConcroller {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 		
 		return new ResponseEntity<Usuario>(usuario.get(), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/listaString", produces = "application/json")
+	public ResponseEntity<List<Usuario>> retornaListaString() {
+		
+		List<Usuario> usuarioList = usuarioRepository.retornaListaString();
+		
+		
+		return new ResponseEntity<List<Usuario>>(usuarioList, HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/", produces = "application/json")
