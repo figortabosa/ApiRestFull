@@ -16,6 +16,7 @@ public class Arrecadacao_Dia implements Serializable{
 
 	
 	private static final long serialVersionUID = 6302380438833466606L;
+	//VEIO DA BRANCH NUMERO-1
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
