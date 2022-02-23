@@ -14,7 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 public class Arrecadacao_Dia implements Serializable{
 
-	
+	// TESTANDO ALTERAÇÃO
 	private static final long serialVersionUID = 6302380438833466606L;
 
 	@Id
